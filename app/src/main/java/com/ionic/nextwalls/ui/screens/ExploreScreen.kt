@@ -32,14 +32,14 @@ import com.ionic.nextwalls.R
 import com.ionic.nextwalls.data.Wallpapers
 import com.ionic.nextwalls.ui.components.extractDominantColor
 import com.ionic.nextwalls.ui.components.AuthState
-import com.ionic.nextwalls.viewmodels.WallpapersViewModel
+import com.ionic.nextwalls.viewmodels.ExploreViewModel
 import com.ionic.nextwalls.viewmodels.AuthViewModel
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ExploreScreen(
     onWallpaperClick: (String) -> Unit = {},
-    wallpapersViewModel: WallpapersViewModel = viewModel(),
+    wallpapersViewModel: ExploreViewModel = viewModel(),
     authViewModel: AuthViewModel = viewModel()
 ) {
     val wallpapers by wallpapersViewModel.wallpapers.collectAsState()

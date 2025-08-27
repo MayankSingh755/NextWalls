@@ -54,13 +54,13 @@ import com.ionic.nextwalls.data.Wallpapers
 import com.ionic.nextwalls.ui.components.AuthState
 import com.ionic.nextwalls.viewmodels.AuthViewModel
 import com.ionic.nextwalls.viewmodels.FavoritesViewModel
-import com.ionic.nextwalls.viewmodels.WallpapersViewModel
+import com.ionic.nextwalls.viewmodels.ExploreViewModel
 
 @Composable
 fun FavoriteScreen(
     authViewModel: AuthViewModel = viewModel(),
     favoritesViewModel: FavoritesViewModel = viewModel(),
-    wallpapersViewModel: WallpapersViewModel = viewModel(),
+    wallpapersViewModel: ExploreViewModel = viewModel(),
     onWallpaperClick: (String) -> Unit = {}
 ) {
     val context = LocalContext.current

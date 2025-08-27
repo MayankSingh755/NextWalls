@@ -26,12 +26,17 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import com.ionic.nextwalls.data.Category
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import coil.compose.AsyncImage
+import com.ionic.nextwalls.data.Wallpapers
+import com.ionic.nextwalls.ui.components.extractDominantColor
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -72,6 +77,15 @@ fun CategoryScreen(
 
 @Composable
 fun CategoryItem(category: Category, onClick: () -> Unit) {
+    val context = LocalContext.current
+
+    val dominantColor by produceState<Color>(initialValue = Color.Transparent, category.thumbnailURL) {
+        value = if (category.thumbnailURL.isNotEmpty()) {
+            extractDominantColor(category.thumbnailURL, context)
+        } else {
+            Color.Transparent
+        }
+    }
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -80,7 +94,11 @@ fun CategoryItem(category: Category, onClick: () -> Unit) {
             .clickable { onClick() },
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = if (dominantColor != Color.Transparent) {
+                dominantColor.copy(alpha = 0.1f)
+            } else {
+                MaterialTheme.colorScheme.surface
+            }
         )
     ) {
         Column {

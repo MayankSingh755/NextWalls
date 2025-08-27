@@ -49,7 +49,7 @@ import androidx.compose.ui.util.lerp
 @Composable
 fun SearchScreen(
     viewModel: SearchViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
-    wallpapersViewModel: com.ionic.nextwalls.viewmodels.WallpapersViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
+    wallpapersViewModel: com.ionic.nextwalls.viewmodels.ExploreViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
     authViewModel: com.ionic.nextwalls.viewmodels.AuthViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
     onWallpaperClick: (String) -> Unit = {}
 ) {

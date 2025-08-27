@@ -26,7 +26,7 @@ import com.ionic.nextwalls.R
 import com.ionic.nextwalls.ui.components.AuthState
 import com.ionic.nextwalls.viewmodels.AuthViewModel
 import com.ionic.nextwalls.viewmodels.CategoryWallpaperViewModel
-import com.ionic.nextwalls.viewmodels.WallpapersViewModel
+import com.ionic.nextwalls.viewmodels.ExploreViewModel
 import android.widget.Toast
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -36,7 +36,7 @@ fun CategoryWallpaperScreen(
     categoryName: String,
     onWallpaperClick: (String) -> Unit = {},
     viewModel: CategoryWallpaperViewModel = viewModel(),
-    wallpapersViewModel: WallpapersViewModel = viewModel(),
+    wallpapersViewModel: ExploreViewModel = viewModel(),
     authViewModel: AuthViewModel = viewModel()
 ) {
     val wallpapers by viewModel.wallpapers.collectAsState()

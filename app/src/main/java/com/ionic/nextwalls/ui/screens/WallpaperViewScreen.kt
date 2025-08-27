@@ -1,20 +1,10 @@
 package com.ionic.nextwalls.ui.screens
 
-import android.Manifest
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Build
+import android.graphics.drawable.BitmapDrawable
 import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -24,10 +14,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -35,15 +24,19 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.palette.graphics.Palette
+import coil.ImageLoader
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
+import coil.request.SuccessResult
 import com.ionic.nextwalls.R
 import com.ionic.nextwalls.ui.components.AuthState
 import com.ionic.nextwalls.viewmodels.AuthViewModel
 import com.ionic.nextwalls.viewmodels.WallpaperViewViewModel
-import com.ionic.nextwalls.viewmodels.WallpapersViewModel
+import com.ionic.nextwalls.viewmodels.ExploreViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 enum class WallpaperTarget {
     HOME, LOCK, BOTH
@@ -55,31 +48,19 @@ fun WallpaperViewScreen(
     wallpaperId: String,
     onBackClick: () -> Unit,
     viewModel: WallpaperViewViewModel = viewModel(),
-    wallpapersViewModel: WallpapersViewModel = viewModel(),
+    wallpapersViewModel: ExploreViewModel = viewModel(),
     authViewModel: AuthViewModel = viewModel()
 ) {
     val wallpaper by viewModel.wallpaper.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val isDownloading by viewModel.isDownloading.collectAsState()
     val isSettingWallpaper by viewModel.isSettingWallpaper.collectAsState()
-    val authState by authViewModel.authState.collectAsState()
     val favorites by wallpapersViewModel.favorites.collectAsState()
+    val authState by authViewModel.authState.collectAsState()
 
     val context = LocalContext.current
-    var showControls by remember { mutableStateOf(true) }
+    var dominantColor by remember { mutableStateOf(Color(0xFF222222)) }
     var showSetWallpaperDialog by remember { mutableStateOf(false) }
-
-    // Permission launcher for storage permission
-    val permissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
-            wallpaper?.let { viewModel.downloadWallpaper(context, it) }
-        } else {
-            Toast.makeText(context,
-                context.getString(R.string.storage_permission_required_to_download_wallpaper), Toast.LENGTH_SHORT).show()
-        }
-    }
 
     LaunchedEffect(wallpaperId) {
         viewModel.loadWallpaper(wallpaperId)
@@ -94,157 +75,106 @@ fun WallpaperViewScreen(
             }
 
             wallpaper != null -> {
-                // Wallpaper Image
-                SubcomposeAsyncImage(
-                    model = ImageRequest.Builder(context)
-                        .data(wallpaper!!.imageUrl)
-                        .crossfade(true)
-                        .build(),
-                    contentDescription = wallpaper!!.title,
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .pointerInput(Unit) {
-                            detectTapGestures(onTap = { showControls = !showControls })
-                        },
-                    contentScale = ContentScale.Crop,
-                    loading = {
-                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                            CircularProgressIndicator()
-                        }
-                    },
-                    error = {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(Color.Gray),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.baseline_broken_image_24),
-                                contentDescription = "Error loading image",
-                                tint = Color.White,
-                                modifier = Modifier.size(48.dp)
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(text = stringResource(R.string.failed_to_load_wallpaper), color = Color.White)
-                        }
-                    }
-                )
-
-                // Top Controls
-                AnimatedVisibility(
-                    visible = showControls,
-                    enter = slideInVertically(initialOffsetY = { -it }) + fadeIn(),
-                    exit = slideOutVertically(targetOffsetY = { -it }) + fadeOut()
-                ) {
-                    TopAppBar(
-                        title = {
-                            Text(
-                                text = wallpaper!!.title,
-                                color = Color.White,
-                                fontWeight = FontWeight.Medium
-                            )
-                        },
-                        navigationIcon = {
-                            IconButton(onClick = onBackClick) {
-                                Icon(
-                                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                    contentDescription = "Back",
-                                    tint = Color.White
-                                )
-                            }
-                        },
-                        actions = {
-                            IconButton(onClick = {
-                                when (authState) {
-                                    is AuthState.Authenticated -> wallpapersViewModel.toggleFavorite(wallpaper!!)
-                                    else -> Toast.makeText(context, "Please sign in first", Toast.LENGTH_SHORT).show()
-                                }
-                            }) {
-                                Icon(
-                                    painter = painterResource(
-                                        id = if (favorites.contains(wallpaper!!.id)) R.drawable.baseline_favorite_24
-                                        else R.drawable.rounded_favorite_24
-                                    ),
-                                    contentDescription = if (favorites.contains(wallpaper!!.id)) "Remove from favorites" else "Add to favorites",
-                                    tint = if (favorites.contains(wallpaper!!.id)) Color.Red else Color.White
-                                )
-                            }
-
-                            IconButton(onClick = {
-                                shareWallpaper(context, wallpaper!!.imageUrl, wallpaper!!.title)
-                            }) {
-                                Icon(imageVector = Icons.Default.Share, contentDescription = "Share", tint = Color.White)
-                            }
-                        },
-                        colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.Black.copy(alpha = 0.5f))
-                    )
+                // Extract dominant color
+                LaunchedEffect(wallpaper!!.imageUrl) {
+                    dominantColor = getDominantColorFromUrl(context, wallpaper!!.imageUrl)
                 }
 
-                // Bottom Controls
-                AnimatedVisibility(
-                    visible = showControls,
-                    enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
-                    exit = slideOutVertically(targetOffsetY = { it }) + fadeOut()
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(dominantColor)
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Column(
+                    // Top Bar
+                    Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .align(Alignment.BottomCenter)
-                            .background(
-                                brush = Brush.verticalGradient(
-                                    colors = listOf(
-                                        Color.Transparent,
-                                        Color.Black.copy(alpha = 0.8f)
-                                    )
-                                )
-                            )
-                            .padding(16.dp)
+                            .padding(top = 8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
+                        IconButton(onClick = onBackClick) {
+                            Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
+                        }
+                        IconButton(onClick = {
+                            if (authState is AuthState.Authenticated) {
+                                wallpapersViewModel.toggleFavorite(wallpaper!!)
+                            } else {
+                                Toast.makeText(context, "Please sign in first", Toast.LENGTH_SHORT).show()
+                            }
+                        }) {
+                            Icon(
+                                painter = painterResource(
+                                    id = if (favorites.contains(wallpaper!!.id)) R.drawable.baseline_favorite_24
+                                    else R.drawable.rounded_favorite_24
+                                ),
+                                contentDescription = "Favorite",
+                                tint = if (favorites.contains(wallpaper!!.id)) Color.Red else Color.White
+                            )
+                        }
+                    }
+
+                    // Wallpaper Image
+                    SubcomposeAsyncImage(
+                        model = wallpaper!!.imageUrl,
+                        contentDescription = wallpaper!!.title,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .aspectRatio(1f)
+                            .clip(RoundedCornerShape(16.dp)),
+                        contentScale = ContentScale.Crop
+                    )
+
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceEvenly
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.next_walls_logo),
+                                contentDescription = "App Logo",
+                                tint = Color.White,
+                                modifier = Modifier.size(28.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = wallpaper!!.title,
+                                style = MaterialTheme.typography.titleLarge,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceEvenly,
+                            modifier = Modifier.fillMaxWidth()
                         ) {
                             ActionButton(
                                 painter = painterResource(R.drawable.rounded_download_2_24),
                                 text = stringResource(R.string.download),
                                 isLoading = isDownloading
                             ) {
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                    viewModel.downloadWallpaper(context, wallpaper!!)
-                                } else {
-                                    when (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                                        PackageManager.PERMISSION_GRANTED -> viewModel.downloadWallpaper(context, wallpaper!!)
-                                        else -> permissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                                    }
-                                }
+                                viewModel.downloadWallpaper(context, wallpaper!!)
                             }
-
                             ActionButton(
                                 painter = painterResource(R.drawable.rounded_wallpaper_24),
                                 text = stringResource(R.string.set_wallpaper),
                                 isLoading = isSettingWallpaper
-                            ) { showSetWallpaperDialog = true }
+                            ) {
+                                showSetWallpaperDialog = true
+                            }
                         }
-                    }
-                }
-            }
-
-            else -> {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Icon(painter = painterResource(R.drawable.outline_error_24), contentDescription = "Error", modifier = Modifier.size(48.dp), tint = MaterialTheme.colorScheme.error)
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Text(text = stringResource(R.string.wallpaper_not_found), style = MaterialTheme.typography.titleMedium)
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Button(onClick = onBackClick) { Text(stringResource(R.string.go_back)) }
                     }
                 }
             }
         }
     }
 
-    // Set wallpaper dialog
+    // Set Wallpaper Dialog
     if (showSetWallpaperDialog && wallpaper != null) {
         SetWallpaperDialog(
             onDismiss = { showSetWallpaperDialog = false },
@@ -255,6 +185,7 @@ fun WallpaperViewScreen(
         )
     }
 }
+
 
 
 
@@ -334,4 +265,15 @@ private fun shareWallpaper(context: Context, imageUrl: String, title: String) {
     }
     context.startActivity(Intent.createChooser(shareIntent,
         context.getString(R.string.share_wallpaper)))
+}
+
+suspend fun getDominantColorFromUrl(context: Context, imageUrl: String): Color {
+    return withContext(Dispatchers.IO) {
+        val loader = ImageLoader(context)
+        val request = ImageRequest.Builder(context).data(imageUrl).allowHardware(false).build()
+        val result = (loader.execute(request) as SuccessResult).drawable
+        val bitmap = (result as BitmapDrawable).bitmap
+        val palette = Palette.from(bitmap).generate()
+        Color(palette.getDominantColor(android.graphics.Color.DKGRAY))
+    }
 }
