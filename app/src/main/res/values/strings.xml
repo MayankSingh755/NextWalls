@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">NextWalls</string>
+    <string name="default_web_client_id">964028610043-76mqe4ejcfcbj99hbdjjjorgi9iqvv2v.apps.googleusercontent.com</string>
+    <string name="temp">Client secret\n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</string>
+    <string name="please_sign_in_first">Please sign in first</string>
+    <string name="start_adding_wallpapers_to_your_favorites">Start adding wallpapers to your favorites</string>
+    <string name="no_favorites_yet">No favorites yet</string>
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="retry">Retry</string>
+    <string name="favorites">%1$s favorites</string>
+    <string name="user">User</string>
+    <string name="profile_picture">Profile Picture</string>
+    <string name="your_data_is_secure_and_never_shared">Your data is secure and never shared</string>
+    <string name="continue_with_google">Continue with Google</string>
+    <string name="access_your_favorite_wallpapers_across_devices">Access your favorite wallpapers across devices</string>
+    <string name="sign_in_to_save_favorites">Sign in to save favorites</string>
+    <string name="loading">Loading...</string>
+    <string name="failed_to_get_google_id_token">Failed to get Google ID token</string>
+    <string name="sign_in_was_cancelled">Sign-in was cancelled</string>
+    <string name="sign_in_failed_with_unexpected_result">Sign-in failed with unexpected result</string>
+    <string name="no_wallpapers_found_for_right_now_but_we_are_adding_more_wallpapers_stay_with_us">No wallpapers found for %1$s right now but we are adding more wallpapers, Stay with us...</string>
+</resources>
