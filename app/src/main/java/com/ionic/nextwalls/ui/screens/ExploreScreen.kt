@@ -35,10 +35,9 @@ import com.ionic.nextwalls.ui.components.AuthState
 import com.ionic.nextwalls.viewmodels.WallpapersViewModel
 import com.ionic.nextwalls.viewmodels.AuthViewModel
 
-// Updated WallpaperScreen.kt
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun WallpaperScreen(
+fun ExploreScreen(
     onWallpaperClick: (String) -> Unit = {},
     wallpapersViewModel: WallpapersViewModel = viewModel(),
     authViewModel: AuthViewModel = viewModel()
@@ -104,13 +103,12 @@ fun WallpaperScreen(
     }
 }
 
-
 @SuppressLint("UnusedBoxWithConstraintsScope")
 @Composable
 fun WallpapersList(
     wallpaper: Wallpapers,
     isFavorite: Boolean = false,
-    onClick: (Wallpapers) -> Unit = {},
+    onClick: () -> Unit = {},
     onFavoriteClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
@@ -129,7 +127,7 @@ fun WallpapersList(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .clickable { onClick(wallpaper) },
+            .clickable { onClick() },
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
         colors = CardDefaults.cardColors(
             containerColor = if (dominantColor != Color.Transparent) {

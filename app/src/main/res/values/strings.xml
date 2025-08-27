@@ -19,4 +19,17 @@
     <string name="sign_in_was_cancelled">Sign-in was cancelled</string>
     <string name="sign_in_failed_with_unexpected_result">Sign-in failed with unexpected result</string>
     <string name="no_wallpapers_found_for_right_now_but_we_are_adding_more_wallpapers_stay_with_us">No wallpapers found for %1$s right now but we are adding more wallpapers, Stay with us...</string>
+    <string name="storage_permission_required_to_download_wallpaper">Storage permission required to download wallpaper</string>
+    <string name="cancel">Cancel</string>
+    <string name="check_out_this_amazing_wallpaper">Check out this amazing wallpaper: %1$s</string>
+    <string name="share_wallpaper">Share Wallpaper</string>
+    <string name="both_screens">Both Screens</string>
+    <string name="lock_screen">Lock Screen</string>
+    <string name="home_screen">Home Screen</string>
+    <string name="choose_where_to_apply_this_wallpaper">Choose where to apply this wallpaper:</string>
+    <string name="set_wallpaper">Set Wallpaper</string>
+    <string name="go_back">Go Back</string>
+    <string name="wallpaper_not_found">Wallpaper not found</string>
+    <string name="download">Download</string>
+    <string name="failed_to_load_wallpaper">Failed to load wallpaper</string>
 </resources>

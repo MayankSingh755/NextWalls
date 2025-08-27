@@ -18,6 +18,7 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -30,6 +31,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -74,7 +76,8 @@ fun WallpaperViewScreen(
         if (isGranted) {
             wallpaper?.let { viewModel.downloadWallpaper(context, it) }
         } else {
-            Toast.makeText(context, "Storage permission required to download wallpaper", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context,
+                context.getString(R.string.storage_permission_required_to_download_wallpaper), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -123,7 +126,7 @@ fun WallpaperViewScreen(
                                 modifier = Modifier.size(48.dp)
                             )
                             Spacer(modifier = Modifier.height(8.dp))
-                            Text(text = "Failed to load wallpaper", color = Color.White)
+                            Text(text = stringResource(R.string.failed_to_load_wallpaper), color = Color.White)
                         }
                     }
                 )
@@ -145,7 +148,7 @@ fun WallpaperViewScreen(
                         navigationIcon = {
                             IconButton(onClick = onBackClick) {
                                 Icon(
-                                    imageVector = Icons.Default.ArrowBack,
+                                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                                     contentDescription = "Back",
                                     tint = Color.White
                                 )
@@ -190,7 +193,10 @@ fun WallpaperViewScreen(
                             .align(Alignment.BottomCenter)
                             .background(
                                 brush = Brush.verticalGradient(
-                                    colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.8f))
+                                    colors = listOf(
+                                        Color.Transparent,
+                                        Color.Black.copy(alpha = 0.8f)
+                                    )
                                 )
                             )
                             .padding(16.dp)
@@ -201,7 +207,7 @@ fun WallpaperViewScreen(
                         ) {
                             ActionButton(
                                 painter = painterResource(R.drawable.rounded_download_2_24),
-                                text = "Download",
+                                text = stringResource(R.string.download),
                                 isLoading = isDownloading
                             ) {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -216,7 +222,7 @@ fun WallpaperViewScreen(
 
                             ActionButton(
                                 painter = painterResource(R.drawable.rounded_wallpaper_24),
-                                text = "Set Wallpaper",
+                                text = stringResource(R.string.set_wallpaper),
                                 isLoading = isSettingWallpaper
                             ) { showSetWallpaperDialog = true }
                         }
@@ -229,9 +235,9 @@ fun WallpaperViewScreen(
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Icon(painter = painterResource(R.drawable.outline_error_24), contentDescription = "Error", modifier = Modifier.size(48.dp), tint = MaterialTheme.colorScheme.error)
                         Spacer(modifier = Modifier.height(16.dp))
-                        Text(text = "Wallpaper not found", style = MaterialTheme.typography.titleMedium)
+                        Text(text = stringResource(R.string.wallpaper_not_found), style = MaterialTheme.typography.titleMedium)
                         Spacer(modifier = Modifier.height(8.dp))
-                        Button(onClick = onBackClick) { Text("Go Back") }
+                        Button(onClick = onBackClick) { Text(stringResource(R.string.go_back)) }
                     }
                 }
             }
@@ -257,7 +263,9 @@ private fun ActionButton(painter: Painter, text: String, isLoading: Boolean, onC
     Button(
         onClick = onClick,
         enabled = !isLoading,
-        modifier = Modifier.height(56.dp).width(140.dp),
+        modifier = Modifier
+            .height(56.dp)
+            .width(140.dp),
         colors = ButtonDefaults.buttonColors(containerColor = Color.White.copy(alpha = 0.9f), contentColor = Color.Black),
         shape = RoundedCornerShape(28.dp)
     ) {
@@ -277,16 +285,18 @@ private fun ActionButton(painter: Painter, text: String, isLoading: Boolean, onC
 private fun SetWallpaperDialog(onDismiss: () -> Unit, onSetWallpaper: (WallpaperTarget) -> Unit) {
     Dialog(onDismissRequest = onDismiss) {
         Surface(shape = RoundedCornerShape(16.dp), color = MaterialTheme.colorScheme.surface) {
-            Column(modifier = Modifier.fillMaxWidth().padding(16.dp)) {
-                Text("Set Wallpaper", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+            Column(modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)) {
+                Text(stringResource(R.string.set_wallpaper), style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
                 Spacer(modifier = Modifier.height(8.dp))
-                Text("Choose where to apply this wallpaper:", style = MaterialTheme.typography.bodyMedium)
+                Text(stringResource(R.string.choose_where_to_apply_this_wallpaper), style = MaterialTheme.typography.bodyMedium)
                 Spacer(modifier = Modifier.height(16.dp))
 
                 OutlinedButton(onClick = { onSetWallpaper(WallpaperTarget.HOME) }, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp)) {
                     Icon(Icons.Default.Home, contentDescription = null)
                     Spacer(modifier = Modifier.width(12.dp))
-                    Text("Home Screen")
+                    Text(stringResource(R.string.home_screen))
                 }
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -294,7 +304,7 @@ private fun SetWallpaperDialog(onDismiss: () -> Unit, onSetWallpaper: (Wallpaper
                 OutlinedButton(onClick = { onSetWallpaper(WallpaperTarget.LOCK) }, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp)) {
                     Icon(Icons.Default.Lock, contentDescription = null)
                     Spacer(modifier = Modifier.width(12.dp))
-                    Text("Lock Screen")
+                    Text(stringResource(R.string.lock_screen))
                 }
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -302,12 +312,14 @@ private fun SetWallpaperDialog(onDismiss: () -> Unit, onSetWallpaper: (Wallpaper
                 Button(onClick = { onSetWallpaper(WallpaperTarget.BOTH) }, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp)) {
                     Icon(painterResource(R.drawable.outline_mobile_24), contentDescription = null)
                     Spacer(modifier = Modifier.width(12.dp))
-                    Text("Both Screens")
+                    Text(stringResource(R.string.both_screens))
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                TextButton(onClick = onDismiss, modifier = Modifier.fillMaxWidth()) { Text("Cancel") }
+                TextButton(onClick = onDismiss, modifier = Modifier.fillMaxWidth()) { Text(
+                    stringResource(R.string.cancel)
+                ) }
             }
         }
     }
@@ -317,7 +329,9 @@ private fun shareWallpaper(context: Context, imageUrl: String, title: String) {
     val shareIntent = Intent(Intent.ACTION_SEND).apply {
         type = "text/plain"
         putExtra(Intent.EXTRA_SUBJECT, title)
-        putExtra(Intent.EXTRA_TEXT, "Check out this amazing wallpaper: $imageUrl")
+        putExtra(Intent.EXTRA_TEXT,
+            context.getString(R.string.check_out_this_amazing_wallpaper, imageUrl))
     }
-    context.startActivity(Intent.createChooser(shareIntent, "Share Wallpaper"))
+    context.startActivity(Intent.createChooser(shareIntent,
+        context.getString(R.string.share_wallpaper)))
 }

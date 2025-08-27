@@ -16,14 +16,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.ionic.nextwalls.viewmodels.CategoryWallpaperViewModel
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.res.stringResource
 import com.ionic.nextwalls.R
+import com.ionic.nextwalls.ui.components.AuthState
+import com.ionic.nextwalls.viewmodels.AuthViewModel
+import com.ionic.nextwalls.viewmodels.CategoryWallpaperViewModel
+import com.ionic.nextwalls.viewmodels.WallpapersViewModel
+import android.widget.Toast
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -31,13 +35,24 @@ fun CategoryWallpaperScreen(
     categoryId: String,
     categoryName: String,
     onWallpaperClick: (String) -> Unit = {},
-    viewModel: CategoryWallpaperViewModel = viewModel()
+    viewModel: CategoryWallpaperViewModel = viewModel(),
+    wallpapersViewModel: WallpapersViewModel = viewModel(),
+    authViewModel: AuthViewModel = viewModel()
 ) {
     val wallpapers by viewModel.wallpapers.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
+    val authState by authViewModel.authState.collectAsState()
+    val favorites by wallpapersViewModel.favorites.collectAsState()
+    val context = LocalContext.current
 
+    // Log category details for debugging
     LaunchedEffect(categoryId) {
-        viewModel.loadWallpapersForCategory(categoryId)
+        println("Loading wallpapers for categoryId: $categoryId, categoryName: $categoryName")
+        if (categoryId.isNotEmpty()) {
+            viewModel.loadWallpapersForCategory(categoryId)
+        } else {
+            println("ERROR: categoryId is empty!")
+        }
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -61,10 +76,14 @@ fun CategoryWallpaperScreen(
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
-                            stringResource(
-                                R.string.no_wallpapers_found_for_right_now_but_we_are_adding_more_wallpapers_stay_with_us,
-                                categoryName
-                            )
+                            text = "No wallpapers found for $categoryName right now, but we are adding more wallpapers. Stay with us!",
+                            style = androidx.compose.material3.MaterialTheme.typography.bodyLarge
+                        )
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = "Check back later for more wallpapers!",
+                            style = androidx.compose.material3.MaterialTheme.typography.bodyMedium,
+                            color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                         )
                     }
                 }
@@ -74,14 +93,47 @@ fun CategoryWallpaperScreen(
                     columns = GridCells.Fixed(2),
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        .padding(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     items(wallpapers) { wallpaper ->
+                        // Log wallpaper details for debugging
+                        println("Wallpaper - ID: '${wallpaper.id}', Title: '${wallpaper.title}', ImageUrl: '${wallpaper.imageUrl}'")
+
                         WallpapersList(
                             wallpaper = wallpaper,
-                            onClick = { onWallpaperClick(wallpaper.id) }
+                            isFavorite = favorites.contains(wallpaper.id),
+                            onClick = {
+                                // Validate wallpaper ID before navigation
+                                val wallpaperId = wallpaper.id.trim()
+                                if (wallpaperId.isNotEmpty() && wallpaperId.isNotBlank()) {
+                                    println("Navigating to wallpaperView with ID: '$wallpaperId'")
+                                    onWallpaperClick(wallpaperId)
+                                } else {
+                                    val errorMsg = "Error: Wallpaper ID is missing or empty. ID: '${wallpaper.id}'"
+                                    println(errorMsg)
+                                    Toast.makeText(
+                                        context,
+                                        errorMsg,
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
+                            },
+                            onFavoriteClick = {
+                                when (authState) {
+                                    is AuthState.Authenticated -> {
+                                        wallpapersViewModel.toggleFavorite(wallpaper)
+                                    }
+                                    else -> {
+                                        Toast.makeText(
+                                            context,
+                                            context.getString(R.string.please_sign_in_first),
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                }
+                            }
                         )
                     }
                 }

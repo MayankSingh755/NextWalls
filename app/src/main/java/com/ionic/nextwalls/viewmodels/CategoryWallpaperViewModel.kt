@@ -29,7 +29,7 @@ class CategoryWallpaperViewModel : ViewModel() {
 
                 val wallpaperList = snapshot.documents.mapNotNull { doc ->
                     try {
-                        val wallpaper = doc.toObject(Wallpapers::class.java)
+                        val wallpaper = doc.toObject(Wallpapers::class.java)?.copy(id = doc.id)
                         wallpaper
                     } catch (_: Exception) {
                         null

@@ -38,11 +38,3 @@ fun NextWallTopBar() {
         modifier = Modifier.fillMaxWidth()
     )
 }
-
-@Preview
-@Composable
-fun NextWallTopBarPreview() {
-    NextWallsTheme {
-        NextWallTopBar()
-    }
-}

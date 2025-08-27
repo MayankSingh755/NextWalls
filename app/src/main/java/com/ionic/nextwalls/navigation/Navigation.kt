@@ -12,12 +12,12 @@ import androidx.navigation.navArgument
 import com.ionic.nextwalls.ui.screens.CategoryScreen
 import com.ionic.nextwalls.ui.screens.CategoryWallpaperScreen
 import com.ionic.nextwalls.ui.screens.FavoriteScreen
-import com.ionic.nextwalls.ui.screens.WallpaperScreen
+import com.ionic.nextwalls.ui.screens.ExploreScreen
 import com.ionic.nextwalls.ui.screens.SearchScreen
 import com.ionic.nextwalls.ui.screens.WallpaperViewScreen
 
 sealed class Screen(val route: String) {
-    object Home : Screen("home")
+    object Explore : Screen("home")
     object Categories : Screen("categories")
     object Favorites : Screen("favorites")
     object Search : Screen("search")
@@ -27,11 +27,11 @@ sealed class Screen(val route: String) {
 fun AppNavGraph(navController: NavHostController, paddingValues: PaddingValues) {
     NavHost(
         navController = navController,
-        startDestination = Screen.Home.route,
+        startDestination = Screen.Explore.route,
         modifier = Modifier.padding(paddingValues)
     ) {
-        composable(Screen.Home.route) {
-            WallpaperScreen(
+        composable(Screen.Explore.route) {
+            ExploreScreen(
                 onWallpaperClick = { wallpaperId ->
                     navController.navigate("wallpaperView/$wallpaperId")
                 }

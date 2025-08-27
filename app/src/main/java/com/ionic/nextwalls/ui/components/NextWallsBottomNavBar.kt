@@ -24,7 +24,7 @@ fun NextWallsBottomNavBar(navController: NavHostController) {
     NavigationBar {
         bottomNavigationItems().forEach { navigationItem ->
             val selected = currentRoute == navigationItem.route
-            val fontSize by animateIntAsState(targetValue = if (selected) 12 else 10)
+            val fontSize by animateIntAsState(targetValue = if (selected) 11 else 10)
 
             NavigationBarItem(
                 selected = selected,

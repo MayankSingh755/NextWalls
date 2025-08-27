@@ -16,14 +16,14 @@ data class BottomNavItems(
 fun bottomNavigationItems(): List<BottomNavItems> {
     return listOf(
         BottomNavItems(
-            label = "Home",
-            icon = painterResource(id = R.drawable.rounded_home_24),
-            route = Screen.Home.route
-        ),
-        BottomNavItems(
             label = "Categories",
             icon = painterResource(id = R.drawable.rounded_category_24),
             route = Screen.Categories.route
+        ),
+        BottomNavItems(
+            label = "Explore",
+            icon = painterResource(id = R.drawable.outline_explore_24),
+            route = Screen.Explore.route
         ),
         BottomNavItems(
             label = "Favorites",
