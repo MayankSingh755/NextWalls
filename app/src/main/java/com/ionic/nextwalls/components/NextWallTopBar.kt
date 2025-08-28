@@ -1,4 +1,4 @@
-package com.ionic.nextwalls.ui.components
+package com.ionic.nextwalls.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.CenterAlignedTopAppBar

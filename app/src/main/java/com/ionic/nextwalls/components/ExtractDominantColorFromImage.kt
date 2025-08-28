@@ -1,4 +1,4 @@
-package com.ionic.nextwalls.ui.components
+package com.ionic.nextwalls.components
 
 import android.content.Context
 import android.graphics.drawable.BitmapDrawable

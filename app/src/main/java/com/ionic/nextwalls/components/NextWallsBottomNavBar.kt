@@ -1,4 +1,4 @@
-package com.ionic.nextwalls.ui.components
+package com.ionic.nextwalls.components
 
 import androidx.compose.animation.core.animateIntAsState
 import androidx.navigation.compose.currentBackStackEntryAsState

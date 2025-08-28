@@ -7,8 +7,8 @@ import androidx.compose.runtime.getValue
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ionic.nextwalls.navigation.AppNavGraph
-import com.ionic.nextwalls.ui.components.NextWallTopBar
-import com.ionic.nextwalls.ui.components.NextWallsBottomNavBar
+import com.ionic.nextwalls.components.NextWallTopBar
+import com.ionic.nextwalls.components.NextWallsBottomNavBar
 
 @Composable
 fun MainScreen() {

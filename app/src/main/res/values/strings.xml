@@ -32,4 +32,14 @@
     <string name="wallpaper_not_found">Wallpaper not found</string>
     <string name="download">Download</string>
     <string name="failed_to_load_wallpaper">Failed to load wallpaper</string>
+    <string name="download_this_wallpaper_title">Download this wallpaper: %1$s\n\nTitle: %2$s</string>
+    <string name="failed_to_share_wallpaper">Failed to share wallpaper</string>
+    <string name="uploaded">Uploaded: %1$s</string>
+    <string name="file_size">File Size</string>
+    <string name="aspect_ratio">Aspect Ratio</string>
+    <string name="resolution">Resolution</string>
+    <string name="details">Details</string>
+    <string name="set">Set</string>
+    <string name="save">Save</string>
+    <string name="favorite_updated">Favorite updated</string>
 </resources>

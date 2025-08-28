@@ -75,4 +75,8 @@ dependencies {
     implementation ("com.google.android.gms:play-services-auth:21.1.0")
     implementation(platform("com.google.firebase:firebase-bom:34.1.0"))
     implementation("com.google.firebase:firebase-analytics")
+
+    implementation ("androidx.compose.foundation:foundation:1.6.0")
+    implementation ("com.google.accompanist:accompanist-pager:0.36.0")
+    implementation("androidx.compose.material:material:1.9.0")
 }

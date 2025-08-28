@@ -51,7 +51,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.ionic.nextwalls.R
 import com.ionic.nextwalls.data.Wallpapers
-import com.ionic.nextwalls.ui.components.AuthState
+import com.ionic.nextwalls.components.AuthState
 import com.ionic.nextwalls.viewmodels.AuthViewModel
 import com.ionic.nextwalls.viewmodels.FavoritesViewModel
 import com.ionic.nextwalls.viewmodels.ExploreViewModel

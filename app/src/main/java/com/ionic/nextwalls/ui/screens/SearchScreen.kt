@@ -44,6 +44,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import kotlin.math.absoluteValue
 import androidx.compose.ui.util.lerp
+import com.ionic.nextwalls.components.AuthState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -136,7 +137,7 @@ fun SearchScreen(
                             favorites = favorites,
                             onFavoriteClick = { wallpaper ->
                                 when (authState) {
-                                    is com.ionic.nextwalls.ui.components.AuthState.Authenticated -> {
+                                    is AuthState.Authenticated -> {
                                         wallpapersViewModel.toggleFavorite(wallpaper)
                                     }
                                     else -> {
@@ -197,7 +198,7 @@ fun SearchScreen(
                     onWallpaperClick = onWallpaperClick,
                     onFavoriteClick = { wallpaper ->
                         when (authState) {
-                            is com.ionic.nextwalls.ui.components.AuthState.Authenticated -> {
+                            is AuthState.Authenticated -> {
                                 wallpapersViewModel.toggleFavorite(wallpaper)
                             }
                             else -> {
@@ -288,7 +289,7 @@ private fun RecentSearchesSection(
 @Composable
 private fun WallpaperCarousel(
     wallpapers: List<com.ionic.nextwalls.data.Wallpapers>,
-    authState: com.ionic.nextwalls.ui.components.AuthState,
+    authState: AuthState,
     favorites: Set<String>,
     onFavoriteClick: (com.ionic.nextwalls.data.Wallpapers) -> Unit,
     onWallpaperClick: (String) -> Unit
@@ -449,7 +450,7 @@ private fun WallpaperCarousel(
 @Composable
 private fun SearchResultsGrid(
     wallpapers: List<com.ionic.nextwalls.data.Wallpapers>,
-    authState: com.ionic.nextwalls.ui.components.AuthState,
+    authState: AuthState,
     favorites: Set<String>,
     onWallpaperClick: (String) -> Unit,
     onFavoriteClick: (com.ionic.nextwalls.data.Wallpapers) -> Unit

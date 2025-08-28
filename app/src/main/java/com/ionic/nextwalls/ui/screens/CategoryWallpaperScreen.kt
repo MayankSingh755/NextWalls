@@ -23,7 +23,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ionic.nextwalls.R
-import com.ionic.nextwalls.ui.components.AuthState
+import com.ionic.nextwalls.components.AuthState
 import com.ionic.nextwalls.viewmodels.AuthViewModel
 import com.ionic.nextwalls.viewmodels.CategoryWallpaperViewModel
 import com.ionic.nextwalls.viewmodels.ExploreViewModel

@@ -30,8 +30,8 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.ionic.nextwalls.R
 import com.ionic.nextwalls.data.Wallpapers
-import com.ionic.nextwalls.ui.components.extractDominantColor
-import com.ionic.nextwalls.ui.components.AuthState
+import com.ionic.nextwalls.components.extractDominantColor
+import com.ionic.nextwalls.components.AuthState
 import com.ionic.nextwalls.viewmodels.ExploreViewModel
 import com.ionic.nextwalls.viewmodels.AuthViewModel
 
@@ -154,8 +154,7 @@ fun WallpapersList(
                     loading = {
                         Box(
                             modifier = Modifier
-                                .fillMaxSize()
-                                .background(Color.LightGray.copy(alpha = 0.3f)),
+                                .fillMaxSize(),
                             contentAlignment = Alignment.Center
                         ) {
                             CircularProgressIndicator(strokeWidth = 2.dp)
