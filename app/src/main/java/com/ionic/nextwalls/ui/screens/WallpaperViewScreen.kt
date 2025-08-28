@@ -152,7 +152,7 @@ fun WallpaperViewScreen(
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(32.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
 
                     // Wallpaper Image
                     SubcomposeAsyncImage(
@@ -174,6 +174,7 @@ fun WallpaperViewScreen(
                             }
                         }
                     )
+                    Spacer(Modifier.height(8.dp))
 
                     // App logo and title row
                     Row(
@@ -184,10 +185,9 @@ fun WallpaperViewScreen(
                         Icon(
                             painter = painterResource(R.drawable.next_walls_logo),
                             contentDescription = "App Logo",
-                            tint = Color.White,
+//                            tint = Color.White,
                             modifier = Modifier.size(32.dp)
                         )
-                        Spacer(modifier = Modifier.width(12.dp))
                         Text(
                             text = wallpaper!!.title,
                             style = MaterialTheme.typography.headlineSmall,
@@ -201,13 +201,12 @@ fun WallpaperViewScreen(
                     // Category description
                     val metadata by viewModel.wallpaperMetadata.collectAsState()
                     metadata?.category?.desc?.takeIf { it.isNotEmpty() }?.let { description ->
-                        Spacer(modifier = Modifier.height(8.dp))
+//                        Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = description,
                             style = MaterialTheme.typography.bodyMedium,
                             color = Color.White.copy(alpha = 0.8f),
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.padding(horizontal = 32.dp)
+                            textAlign = TextAlign.Center
                         )
                     }
 
