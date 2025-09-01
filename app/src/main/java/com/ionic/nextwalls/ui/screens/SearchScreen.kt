@@ -42,6 +42,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.ui.res.stringResource
 import kotlin.math.absoluteValue
 import androidx.compose.ui.util.lerp
 import com.ionic.nextwalls.components.AuthState
@@ -113,7 +114,6 @@ fun SearchScreen(
                     CircularProgressIndicator()
                 }
             }
-
             uiState.error != null -> {
                 Box(
                     modifier = Modifier.fillMaxSize(),
@@ -133,7 +133,6 @@ fun SearchScreen(
                     if (allWallpapers.isNotEmpty()) {
                         WallpaperCarousel(
                             wallpapers = allWallpapers.shuffled().take(10),
-                            authState = authState,
                             favorites = favorites,
                             onFavoriteClick = { wallpaper ->
                                 when (authState) {
@@ -177,11 +176,11 @@ fun SearchScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "No wallpapers found",
+                            text = stringResource(R.string.no_wallpapers_found),
                             style = MaterialTheme.typography.titleMedium
                         )
                         Text(
-                            text = "Try a different search term",
+                            text = stringResource(R.string.try_a_different_search_term),
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -193,7 +192,6 @@ fun SearchScreen(
                 // Show search results
                 SearchResultsGrid(
                     wallpapers = uiState.searchResults,
-                    authState = authState,
                     favorites = favorites,
                     onWallpaperClick = onWallpaperClick,
                     onFavoriteClick = { wallpaper ->
@@ -230,7 +228,7 @@ private fun RecentSearchesSection(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Recent Searches",
+                text = stringResource(R.string.recent_searches),
                 style = MaterialTheme.typography.titleMedium
             )
             TextButton(onClick = onClearAll) {
@@ -289,7 +287,6 @@ private fun RecentSearchesSection(
 @Composable
 private fun WallpaperCarousel(
     wallpapers: List<com.ionic.nextwalls.data.Wallpapers>,
-    authState: AuthState,
     favorites: Set<String>,
     onFavoriteClick: (com.ionic.nextwalls.data.Wallpapers) -> Unit,
     onWallpaperClick: (String) -> Unit
@@ -299,7 +296,7 @@ private fun WallpaperCarousel(
     // Auto-scroll effect
     LaunchedEffect(pagerState) {
         while (true) {
-            kotlinx.coroutines.delay(4000) // 4 seconds delay
+            kotlinx.coroutines.delay(4000)
             val nextPage = (pagerState.currentPage + 1) % wallpapers.size
             pagerState.animateScrollToPage(nextPage)
         }
@@ -307,7 +304,7 @@ private fun WallpaperCarousel(
 
     Column {
         Text(
-            text = "Try Something New",
+            text = stringResource(R.string.try_something_new),
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(vertical = 16.dp)
@@ -450,7 +447,6 @@ private fun WallpaperCarousel(
 @Composable
 private fun SearchResultsGrid(
     wallpapers: List<com.ionic.nextwalls.data.Wallpapers>,
-    authState: AuthState,
     favorites: Set<String>,
     onWallpaperClick: (String) -> Unit,
     onFavoriteClick: (com.ionic.nextwalls.data.Wallpapers) -> Unit

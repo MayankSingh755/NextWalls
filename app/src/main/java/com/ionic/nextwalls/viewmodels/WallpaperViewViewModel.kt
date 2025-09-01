@@ -11,6 +11,7 @@ import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
 import android.widget.Toast
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.firestore.FirebaseFirestore
@@ -30,16 +31,9 @@ import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
 import androidx.core.net.toUri
+import com.ionic.nextwalls.R
 import com.ionic.nextwalls.data.Category
-
-
-data class WallpaperMetadata(
-    val resolution: ImageResolution? = null,
-    val aspectRatio: String = "",
-    val category: Category? = null,
-    val uploadedAt: String = "",
-    val fileSizeEstimate: String = ""
-)
+import com.ionic.nextwalls.data.WallpaperMetadata
 
 class WallpaperViewViewModel : ViewModel() {
     private val _wallpaper = MutableStateFlow<Wallpapers?>(null)
@@ -186,10 +180,12 @@ class WallpaperViewViewModel : ViewModel() {
             if (intent.resolveActivity(context.packageManager) != null) {
                 context.startActivity(intent)
             } else {
-                Toast.makeText(context, "No email app found", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context,
+                    context.getString(R.string.no_email_app_found), Toast.LENGTH_SHORT).show()
             }
         } catch (_: Exception) {
-            Toast.makeText(context, "Failed to open email app", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context,
+                context.getString(R.string.failed_to_open_email_app), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -204,7 +200,9 @@ class WallpaperViewViewModel : ViewModel() {
                 withContext(Dispatchers.Main) {
                     Toast.makeText(
                         context,
-                        if (result) "Wallpaper downloaded successfully!" else "Download failed",
+                        if (result) context.getString(R.string.wallpaper_downloaded_successfully) else context.getString(
+                            R.string.download_failed
+                        ),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -229,13 +227,14 @@ class WallpaperViewViewModel : ViewModel() {
                 withContext(Dispatchers.Main) {
                     Toast.makeText(
                         context,
-                        if (result) "Wallpaper set successfully!" else "Failed to set wallpaper",
+                        if (result) context.getString(R.string.wallpaper_set_successfully) else context.getString(R.string.failed_to_set_wallpaper),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(context, "Failed to set wallpaper: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context,
+                        context.getString(R.string.failed_to_set_wallpaper_, e.message), Toast.LENGTH_SHORT).show()
                 }
             } finally {
                 _isSettingWallpaper.value = false

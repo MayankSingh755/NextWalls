@@ -94,7 +94,8 @@ fun FavoriteScreen(
                             context.getString(R.string.failed_to_get_google_id_token), Toast.LENGTH_SHORT).show()
                     }
                 } catch (e: ApiException) {
-                    Toast.makeText(context, "Google Sign-In failed: ${e.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context,
+                        context.getString(R.string.google_sign_in_failed, e.message), Toast.LENGTH_LONG).show()
                 }
             }
             Activity.RESULT_CANCELED -> {
@@ -310,7 +311,7 @@ private fun AuthenticatedContent(
                 onClick = onSignOutClick,
                 modifier = Modifier.height(36.dp)
             ) {
-                Text(text = "Sign Out", style = MaterialTheme.typography.bodySmall)
+                Text(text = stringResource(R.string.sign_out), style = MaterialTheme.typography.bodySmall)
             }
         }
 

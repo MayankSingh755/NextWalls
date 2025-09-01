@@ -84,7 +84,7 @@ fun AppNavGraph(navController: NavHostController, paddingValues: PaddingValues) 
                 wallpaperId = wallpaperId,
                 onBackClick = { navController.popBackStack() },
 
-            )
+                )
         }
     }
 }

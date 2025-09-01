@@ -12,10 +12,8 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.ionic.nextwalls.R
-import com.ionic.nextwalls.ui.theme.NextWallsTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -41,10 +41,8 @@ class ExploreViewModel : ViewModel() {
         _isRefreshing.value = true
         viewModelScope.launch {
             try {
-                // Generate a random value for Firestore query
                 val randomValue = Random.nextDouble()
 
-                // Fetch wallpapers starting from random value
                 val snapshot = firestore.collection("wallpapers")
                     .orderBy("randomKey")
                     .startAt(randomValue)
@@ -56,7 +54,6 @@ class ExploreViewModel : ViewModel() {
                     doc.toObject(Wallpapers::class.java)?.copy(id = doc.id)
                 }
 
-                // If less than 20 items were returned, fetch more from the start
                 if (wallpaperList.size < 20) {
                     val extraSnapshot = firestore.collection("wallpapers")
                         .orderBy("randomKey")
@@ -71,7 +68,6 @@ class ExploreViewModel : ViewModel() {
                     wallpaperList = wallpaperList + extraWallpapers
                 }
 
-                // Fallback: If still empty, shuffle everything as last resort
                 if (wallpaperList.isEmpty()) {
                     val fallbackSnapshot = firestore.collection("wallpapers").get().await()
                     wallpaperList = fallbackSnapshot.documents.mapNotNull { doc ->

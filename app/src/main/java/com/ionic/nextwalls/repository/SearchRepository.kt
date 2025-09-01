@@ -13,41 +13,34 @@ class SearchRepository {
             val searchQuery = query.lowercase().trim()
 
             // Search by title (case-insensitive)
-            val titleResults = wallpapersCollection
+            val titleResultsSnapshot = wallpapersCollection
                 .orderBy("title")
                 .startAt(searchQuery)
                 .endAt(searchQuery + "\uf8ff")
                 .get()
                 .await()
-                .toObjects(Wallpapers::class.java)
 
-            // Also search for titles containing the search term
-            val allWallpapers = wallpapersCollection
+            val titleResults = titleResultsSnapshot.documents.mapNotNull { document ->
+                document.toObject(Wallpapers::class.java)?.copy(id = document.id)
+            }
+
+            val allWallpapersSnapshot = wallpapersCollection
                 .get()
                 .await()
-                .toObjects(Wallpapers::class.java)
+
+            val allWallpapers = allWallpapersSnapshot.documents.mapNotNull { document ->
+                document.toObject(Wallpapers::class.java)?.copy(id = document.id)
+            }
 
             val containsResults = allWallpapers.filter { wallpaper ->
                 wallpaper.title.lowercase().contains(searchQuery) &&
                         !titleResults.any { it.id == wallpaper.id }
             }
 
-            // Combine results, prioritizing exact matches
             titleResults + containsResults
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            println("SearchRepository Error: ${e.message}")
             emptyList()
         }
     }
-
-//    suspend fun getAllWallpapers(): List<Wallpapers> {
-//        return try {
-//            wallpapersCollection
-//                .orderBy("createdAt", Query.Direction.DESCENDING)
-//                .get()
-//                .await()
-//                .toObjects(Wallpapers::class.java)
-//        } catch (_: Exception) {
-//            emptyList()
-//        }
-//    }
 }

@@ -15,7 +15,7 @@ fun MainScreen() {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
-    val showBars = !(currentRoute?.startsWith("wallpaperView") ?: false)
+    val showBars = currentRoute?.startsWith("wallpaperView") != true
 
     Scaffold(
         topBar = {

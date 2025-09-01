@@ -28,6 +28,7 @@ import com.ionic.nextwalls.viewmodels.AuthViewModel
 import com.ionic.nextwalls.viewmodels.CategoryWallpaperViewModel
 import com.ionic.nextwalls.viewmodels.ExploreViewModel
 import android.widget.Toast
+import androidx.compose.ui.res.stringResource
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -45,13 +46,9 @@ fun CategoryWallpaperScreen(
     val favorites by wallpapersViewModel.favorites.collectAsState()
     val context = LocalContext.current
 
-    // Log category details for debugging
     LaunchedEffect(categoryId) {
-        println("Loading wallpapers for categoryId: $categoryId, categoryName: $categoryName")
         if (categoryId.isNotEmpty()) {
             viewModel.loadWallpapersForCategory(categoryId)
-        } else {
-            println("ERROR: categoryId is empty!")
         }
     }
 
@@ -65,7 +62,7 @@ fun CategoryWallpaperScreen(
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         CircularProgressIndicator()
                         Spacer(modifier = Modifier.height(16.dp))
-                        Text("Loading $categoryName wallpapers...")
+                        Text(stringResource(R.string.loading_wallpapers, categoryName))
                     }
                 }
             }
@@ -76,12 +73,15 @@ fun CategoryWallpaperScreen(
                 ) {
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Text(
-                            text = "No wallpapers found for $categoryName right now, but we are adding more wallpapers. Stay with us!",
+                            text = stringResource(
+                                R.string.no_wallpapers_found_for_right_now_but_we_are_adding_more_wallpapers_stay_with_us_categoryWallpaperScreen,
+                                categoryName
+                            ),
                             style = androidx.compose.material3.MaterialTheme.typography.bodyLarge
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = "Check back later for more wallpapers!",
+                            text = stringResource(R.string.check_back_later_for_more_wallpapers),
                             style = androidx.compose.material3.MaterialTheme.typography.bodyMedium,
                             color = androidx.compose.material3.MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
                         )
@@ -98,20 +98,19 @@ fun CategoryWallpaperScreen(
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     items(wallpapers) { wallpaper ->
-                        // Log wallpaper details for debugging
-                        println("Wallpaper - ID: '${wallpaper.id}', Title: '${wallpaper.title}', ImageUrl: '${wallpaper.imageUrl}'")
 
                         WallpapersList(
                             wallpaper = wallpaper,
                             isFavorite = favorites.contains(wallpaper.id),
                             onClick = {
-                                // Validate wallpaper ID before navigation
                                 val wallpaperId = wallpaper.id.trim()
                                 if (wallpaperId.isNotEmpty() && wallpaperId.isNotBlank()) {
-                                    println("Navigating to wallpaperView with ID: '$wallpaperId'")
                                     onWallpaperClick(wallpaperId)
                                 } else {
-                                    val errorMsg = "Error: Wallpaper ID is missing or empty. ID: '${wallpaper.id}'"
+                                    val errorMsg = context.getString(
+                                        R.string.error_wallpaper_id_is_missing_or_empty_id,
+                                        wallpaper.id
+                                    )
                                     println(errorMsg)
                                     Toast.makeText(
                                         context,

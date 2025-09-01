@@ -45,7 +45,6 @@ class FavoritesViewModel : ViewModel() {
 
                 _favoriteWallpapers.value = favoriteWallpapers
             } catch (e: Exception) {
-                // Handle error silently or log it
                 _favoriteWallpapers.value = emptyList()
                 e.printStackTrace()
             } finally {
@@ -76,12 +75,10 @@ class FavoritesViewModel : ViewModel() {
                     com.google.firebase.firestore.SetOptions.merge()
                 ).await()
 
-                // Update local state
                 _favoriteWallpapers.value =
                     _favoriteWallpapers.value.filter { it.id != wallpaper.id }
 
             } catch (e: Exception) {
-                // Handle error - could show a toast or log the error
                 e.printStackTrace()
             }
         }

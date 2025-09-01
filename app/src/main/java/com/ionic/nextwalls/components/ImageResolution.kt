@@ -10,7 +10,7 @@ data class ImageResolution(
     val width: Int,
     val height: Int
 ) {
-    override fun toString(): String = "${width} x ${height}"
+    override fun toString(): String = "$width x $height"
 
     fun getAspectRatio(): Double = width.toDouble() / height.toDouble()
 }

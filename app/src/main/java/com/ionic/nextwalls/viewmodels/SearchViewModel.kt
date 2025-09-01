@@ -49,7 +49,7 @@ class SearchViewModel : ViewModel() {
                     searchResults = results,
                     error = null
                 )
-            } catch (e: Exception) {
+            } catch (_: Exception) {
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,
                     error = "Search failed. Please try again."

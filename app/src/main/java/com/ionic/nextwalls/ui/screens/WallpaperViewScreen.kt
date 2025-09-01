@@ -34,9 +34,9 @@ import coil.request.ImageRequest
 import coil.request.SuccessResult
 import com.ionic.nextwalls.R
 import com.ionic.nextwalls.components.AuthState
+import com.ionic.nextwalls.data.WallpaperMetadata
 import com.ionic.nextwalls.viewmodels.AuthViewModel
 import com.ionic.nextwalls.viewmodels.ExploreViewModel
-import com.ionic.nextwalls.viewmodels.WallpaperMetadata
 import com.ionic.nextwalls.viewmodels.WallpaperViewViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -185,7 +185,6 @@ fun WallpaperViewScreen(
                         Icon(
                             painter = painterResource(R.drawable.next_walls_logo),
                             contentDescription = "App Logo",
-//                            tint = Color.White,
                             modifier = Modifier.size(32.dp)
                         )
                         Text(
@@ -201,7 +200,6 @@ fun WallpaperViewScreen(
                     // Category description
                     val metadata by viewModel.wallpaperMetadata.collectAsState()
                     metadata?.category?.desc?.takeIf { it.isNotEmpty() }?.let { description ->
-//                        Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = description,
                             style = MaterialTheme.typography.bodyMedium,
@@ -297,12 +295,12 @@ private fun WallpaperMetadataSection(
                     MetaColumn(
                         icon = painterResource(R.drawable.outline_mobile_24),
                         label = stringResource(R.string.resolution),
-                        value = metadata?.resolution?.toString() ?: "Loading..."
+                        value = metadata?.resolution?.toString() ?: stringResource(R.string.loading)
                     )
                     MetaColumn(
                         icon = painterResource(R.drawable.rounded_wallpaper_24),
                         label = stringResource(R.string.aspect_ratio),
-                        value = metadata?.aspectRatio ?: "Loading..."
+                        value = metadata?.aspectRatio ?: stringResource(R.string.loading)
                     )
                 }
 
@@ -313,12 +311,12 @@ private fun WallpaperMetadataSection(
                     MetaColumn(
                         icon = painterResource(R.drawable.next_walls_logo),
                         label = "Category",
-                        value = metadata?.category?.name ?: "Loading..."
+                        value = metadata?.category?.name ?: stringResource(R.string.loading)
                     )
                     MetaColumn(
                         icon = painterResource(R.drawable.rounded_download_2_24),
                         label = stringResource(R.string.file_size),
-                        value = metadata?.fileSizeEstimate ?: "Loading..."
+                        value = metadata?.fileSizeEstimate ?: stringResource(R.string.loading)
                     )
                 }
             }
@@ -331,7 +329,7 @@ private fun WallpaperMetadataSection(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = stringResource(R.string.uploaded, metadata?.uploadedAt ?: "Loading..."),
+                    text = stringResource(R.string.uploaded, metadata?.uploadedAt ?: stringResource(R.string.loading)),
                     style = MaterialTheme.typography.bodySmall,
                     color = Color.White.copy(alpha = 0.8f)
                 )
@@ -342,7 +340,7 @@ private fun WallpaperMetadataSection(
                 ) {
                     Icon(Icons.Default.Warning, contentDescription = "Report", tint = Color.Red)
                     Spacer(modifier = Modifier.width(6.dp))
-                    Text("Report", fontWeight = FontWeight.SemiBold)
+                    Text(stringResource(R.string.report), fontWeight = FontWeight.SemiBold)
                 }
             }
         }

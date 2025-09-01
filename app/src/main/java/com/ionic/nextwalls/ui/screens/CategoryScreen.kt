@@ -32,8 +32,10 @@ import androidx.compose.ui.layout.ContentScale
 import com.ionic.nextwalls.data.Category
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import coil.compose.AsyncImage
+import com.ionic.nextwalls.R
 import com.ionic.nextwalls.components.extractDominantColor
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -50,7 +52,7 @@ fun CategoryScreen(
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     CircularProgressIndicator()
                     Spacer(Modifier.height(16.dp))
-                    Text("Loading...")
+                    Text(stringResource(R.string.loading))
                 }
             }
         } else {
@@ -64,7 +66,6 @@ fun CategoryScreen(
             ) {
                 items(categories) { category ->
                     CategoryItem(category) {
-                        println("Category clicked: ID=${category.id}, Name=${category.name}")
                         onCategoryClick(category.id, category.name)
                     }
                 }
